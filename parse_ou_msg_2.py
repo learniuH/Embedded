@@ -12,36 +12,36 @@ previous_data_field = None
 # 定义每个字节的bit描述
 bit_definitions = {
     11: {
-        1: "Emergency Stop",
-        2: "Horn",
-        3: "Light",
-        5: "Parking Brake",
-        7: "Reel Forward"
+        1: "急停",
+        2: "喇叭",
+        3: "灯光",
+        5: "驻刹",
+        7: "卷盘正转"
     },
     12: {
-        0: "Reel Reverse",
-        1: "Drill",
-        2: "Walk",
-        3: "Oil Pump Start",
-        4: "Oil Pump Stop",
-        5: "Roof Raise",
-        6: "Roof Lower",
-        7: "Swing Right"
+        0: "卷盘反转",
+        1: "打孔",
+        2: "行走",
+        3: "油泵启动",
+        4: "油泵停止",
+        5: "顶棚升",
+        6: "顶棚降",
+        7: "回转右"
     },
     13: {
-        0: "Swing Left",
-        1: "Drill Impact",
-        2: "Full Speed Impact",
-        3: "Thrust High",
-        4: "Thrust Low",
-        5: "Rear Leg Raise",
-        6: "Rear Leg Lower",
-        7: "Water Steam Control"
+        0: "回转左",
+        1: "开孔冲击",
+        2: "全速冲击",
+        3: "推进高",
+        4: "推进低",
+        5: "后支腿升",
+        6: "后支腿降",
+        7: "水汽控制"
     },
     14: {
-        1: "Top Button",
-        2: "Engine Start",
-        3: "Engine Stop"
+        1: "顶部按键",
+        2: "发动机启",
+        3: "发动机停"
     }
 }
 
