@@ -1,4 +1,6 @@
 import math
+from collections.abc import Iterable
+from functools import reduce
 ################################################## 字符串 & 编码 ##################################################
 devided = 10 // 3 #取整得 3
 devided = 10 / 3  #精确除法得 3.333333...
@@ -74,6 +76,7 @@ script_dict.pop('Bob') #通过 .pop(键) 的方式删除 dict 中的键值对
 my_dict = {0: "apple", 1: "banana", 2: "cherry"}
 for key, value in my_dict.items():
     print(f"key: {key}, value: {value}")
+print(my_dict.items()) # dict_items([(0, 'apple'), (1, 'banana'), (2, 'cherry')])
 '''
 my_dict.items()
 返回一个包含字典中所有键值对的视图对象,表示为(key, value)的元组列表
@@ -179,4 +182,266 @@ def mul(*number):
             mulvalue *= i
         return mulvalue
     
-# starting from 递归函数
+# 递归函数
+def fact(n): # 计算n的阶乘
+    # n! = n * (n-1) * (n-2) ... * 2 * 1 = n * (n-1)! = n * fact(n-1)
+    if n == 1:
+        return 1
+    return n * fact(n-1)
+
+def Move(n,a,b,c):
+    if n == 1:
+        print(a,'-->',c)
+    else:
+        Move(n-1,a,c,b) #将上n-1个从a移到b上
+        Move(1,a,b,c) #必要步骤：将最后一个从a移到c上
+        Move(n-1,b,a,c) #将上n-1个从b移到c上
+
+Move(3, 1, 2, 3)
+
+################################################## 切片 ##################################################
+#写一个代码，获取列表的前三个元素
+list_temp = ['1', '2', '3', '6', '7', '8']
+list_display = []
+for i in range(3):
+    list_display.append(list_temp[i])
+print(list_display) # ['1', '2', '3']
+
+#对于这样经常指定索引范围的操作,用循环十分频繁,Python提供了slice(切片)的操作符
+#应对上面的问题,使用slice一行代码即可完成操作
+list_display = list_temp[1:3] # ['2', '3']
+list_display = list_temp[3:6] # ['6', '7', '8']
+#总结: [x:y] 左闭右开 x y 对应的是list的索引
+
+# 同样的支持取倒数切片
+list_display = list_temp[-2:-1] # ['7'] -2是倒数第二个元素,同样 左闭右开
+list_display = list_temp[1:-1] # ['2', '3', '6', '7'] 去掉两头
+list_display = list_temp[-2:] # ['7', '8']
+#总结: -1是倒数第一个元素的索引, -2是倒数第二个元素的索引,同样是 左闭右开
+
+# 生成一个 0-99 的list
+hundred = list(range(100))
+print(hundred)
+# 取出列表的前20个元素
+hundred[:20]
+# 取出列表的后30个元素
+hundred[-30:]
+# 前十个数 每2个取1个
+print(hundred[:10:2]) # [0, 2, 4, 6, 8]
+#所有数 每5个取1个
+print(hundred[::5]) # [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95]
+# 针对字符串同样适用
+list_str = 'ABCDEF'
+print(list_str[0:3]) #ABC
+print(list_str[::2]) #ACE
+
+#exercise
+def trim(s):
+    while s and (s[0] == ' ' or s[-1] == ' '):
+        if(s[0] == ' '):
+            #如果第一个元素是' ',就去掉
+            s = s[1:]
+            #最后一个元素是' ',去掉
+        else:
+            s = s[:-1]
+    return s
+
+################################################## 迭代 ##################################################
+#迭代dict
+dict_temp = {'a': 1, 'b': 2, 'c': 3}
+#迭代key
+for key in dict_temp:
+    print(key) # a\n b\n c\n
+#迭代value
+for value in dict_temp.values():
+    print(value) #1\n 2\n 3\n
+#迭代 key 和 value
+for k, v in dict_temp.items():
+    print(k, v) #a 1\n b 2\n c 3\n
+
+#同样的字符串也是可以迭代的
+for ch in 'ABC':
+    print(ch) # A\n B\n C\n
+
+#所以当我们使用 for 循环时,只要作用于一个可迭代的对象,那么for循环就可以正常运行
+#如何判断一个对象是否可迭代?
+#from collections.abc import Iterable
+isinstance('abc', Iterable) #True
+isinstance([1, 2, 3], Iterable) #True
+isinstance(123, Iterable) #False
+
+#exercise
+def findMinAndMax(L):
+    if L != []:
+        Max = L[0]
+        Min = L[0]
+        for value in L:
+            if value < Min:
+                Min = value
+            elif value > Max:
+                Max = value
+        return (Min, Max)
+    else:
+        return (None, None)
+
+################################################## 列表生成式 ##################################################
+#要生成 [1*1, 2*2, 3*3, ...10*10]?
+hundred_list = []
+for i in range(1,11):
+    hundred_list.append(i * i) # [1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+#但是循环太过繁琐,使用列表生成式:
+hundred_list = [x * x for x in range(1, 11)] # [1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+
+# 列表生成式 使用两个变量生成list
+dict_list_gen = {'x': 'A', 'y': 'B', 'z': 'C'}
+list_generate = [k+ '=' + v for k, v in dict_list_gen.items()] # ['x=A', 'y=B', 'z=C']
+
+# 把所有字符串变小写
+list_str = ['HELLO', 'WORLD', 'LEARNIUH']
+list_str_lower = [s.lower() for s in list_str] # ['hello', 'world', 'learniuh']
+
+#if...else
+#生成偶数,跟在 for 后面的 if 是筛选条件
+print([x for x in range(1,11) if x % 2 == 0]) # [2, 4, 6, 8, 10]
+#在 for 前面的 if...else 是表达式
+print([x if x % 2 == 0 else -x for x in range(1, 11)]) # [-1, 2, -3, 4, -5, 6, -7, 8, -9, 10]
+
+# exercise
+L1 = ['Hello', 'World', 18, 'Apple', None]
+L2 = [element.lower() for element in L1 if isinstance(element, str)] # ['hello', 'world', 'apple']
+# 以下是求解过程
+# def function(L1):
+#     L2 = []
+#     for element in L1:
+#         if isinstance(element, Iterable):
+#             L2.append(element.lower())
+#     return L2
+
+################################################## 生成器 generator ##################################################
+# 与列表生成式不同的是 外层是 ()
+generation = (x * x for x in range(1,11))
+print(generation) # <generator object <genexpr> at 0x0000022F3316F448>
+# 关于 generator 的细节请看博客
+
+# exercise
+
+################################################## 高阶函数 ##################################################
+#既然变量可以指向函数,函数的参数也能接收变量,那么一个函数就可以接收另一个函数作为变量,这种函数就叫做高阶函数
+a = -1
+b = 1
+def Higher_order_function(a, b, abs):
+    return abs(a) + abs(b) # 2
+
+# map
+def f(x):
+    return x * x
+ret = list(map(f, [1, 2, 3, 4, 5, 6, 7, 8])) # [1, 4, 9, 16, 25, 36, 49, 64]
+
+ret = list(map(str, [1, 2, 3, 4, 5, 6, 7, 8])) # ['1', '2', '3', '4', '5', '6', '7', '8']
+
+# reduce
+# reduce(f, [x1, x2, x3, x4]) = f(f(f(x1, x2), x3), x4)
+def add(x, y):
+    return x + y
+# from functools import reduce
+reduce(add, [1, 3, 5, 7, 9]) # 25
+
+# exercise
+def normalize(name):
+    return name[0].upper()+name[1:].lower()
+
+L1 = ['adam', 'LISA', 'barT']
+L2 = list(map(normalize, L1)) # ['Adam', 'Lisa', 'Bart']
+
+# exercise
+def mul(x, y):
+    return x * y
+
+def prod(L):
+    return reduce(mul, L)
+
+print('3 * 5 * 7 * 9 =', prod([3, 5, 7, 9])) # 945
+
+# exercise
+exercise_dict = {'1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '.': 0}
+
+def mul(x, y):
+    return x * 10
+
+################################################## filter ##################################################
+def odd(x):
+    return x % 2 == 1
+print(list(filter(odd, [1, 2, 4, 5, 6, 9, 10, 15]))) # [1, 5, 9, 15]
+[n for n in [1, 2, 4, 5, 6, 9, 10, 15] if n % 2 == 1] # 同样的效果
+
+#把一个序列中的空字符串删除
+def no_empty(s):
+    return s and s.strip()
+
+print(list(filter(no_empty, ['A', '', 'B', None, 'C', '  ']))) # ['A', 'B', 'C']
+
+################################################## sorted ##################################################
+sorted([36, 5, -12, 9, -21]) # [-21, -12, 5, 9, 36]
+sorted([36, 5, -12, 9, -21], key = abs) # [5, 9, -12, -21, 36]
+
+sorted(['bob', 'about', 'Zoo', 'Credit']) # ['Credit', 'Zoo', 'about', 'bob']
+# 忽略大小写比较两个字符串
+sorted(['bob', 'about', 'Zoo', 'Credit'], key=str.lower) # ['about', 'bob', 'Credit', 'Zoo']
+
+# 反向排序
+sorted([1, 2, 4, 7, 9], reverse=True) # [9, 7, 4, 2, 1]
+
+# key指定的函数将作用于list的每一个元素上,并根据key函数返回的结果进行排序 ！！！！！！！！！！
+# exercise
+L = [('Bob', 75), ('Adam', 92), ('Bart', 66), ('Lisa', 88)]
+
+def by_name(t):
+    return t[0]
+
+def by_score(t):
+    return t[1]
+
+L2 = sorted(L, key=by_score) # [('Bart', 66), ('Bob', 75), ('Lisa', 88), ('Adam', 92)]
+L3 = sorted(L, key=by_score, reverse=True) # [('Adam', 92), ('Lisa', 88), ('Bob', 75), ('Bart', 66)]
+
+################################################## 返回函数 ##################################################
+def count():
+    fs = []
+    for i in range(1, 4):
+        def f():
+             return i*i
+        fs.append(f)
+    return fs
+f1, f2, f3 = count() # 9 9 9
+# 对比
+def count():
+    def f(j):
+        def g():
+            return j*j
+        return g
+    fs = []
+    for i in range(1, 4):
+        fs.append(f(i))
+    return fs
+f1, f2, f3 = count() # 1 4 9
+
+# exercise
+def createCounter():
+    n = 0
+    def counter():
+        # 使用闭包时,对外层变量赋值前,需要先使用 nonlocal 声明该变量不是当前函数的局部变量
+        nonlocal n
+        n = n + 1
+        return n
+    return counter
+
+# 测试:
+counterA = createCounter()
+print(counterA(), counterA(), counterA(), counterA(), counterA()) # 1 2 3 4 5
+counterB = createCounter()
+if [counterB(), counterB(), counterB(), counterB()] == [1, 2, 3, 4]:
+    print('测试通过!')
+else:
+    print('测试失败!')
+
+#### starting from Anonymous Functions
