@@ -1,6 +1,7 @@
 import math
 from collections.abc import Iterable
 from functools import reduce
+import functools
 ################################################## 字符串 & 编码 ##################################################
 devided = 10 // 3 #取整得 3
 devided = 10 / 3  #精确除法得 3.333333...
@@ -444,4 +445,63 @@ if [counterB(), counterB(), counterB(), counterB()] == [1, 2, 3, 4]:
 else:
     print('测试失败!')
 
-#### starting from Anonymous Functions
+
+################################################## 匿名函数 ##################################################
+list(map(lambda x: x * x, [1, 2, 3, 4, 5, 6])) # [1, 4, 9, 16, 25, 36]
+# 实际上 lamdba 就是:
+def f(x):
+    return x * x
+# lambda 前面的就是函数的参数
+
+# exercise
+L = list(filter(lambda n: n % 2 == 1, range(1,20))) # [1, 3, 5, 7, 9, 11, 13, 15, 17, 19]
+
+################################################## 装饰器 ##################################################
+def log(func):
+    def wrapper(*args, **kw):
+        print('call %s():' % func.__name__)
+        return func(*args, **kw)
+    return wrapper
+
+
+@log
+def now():
+    print('2024-09-23')
+# 完全看不懂装饰器
+
+################################################## 偏函数 ##################################################
+# import functools
+int2 = functools.partial(int, base=2)
+# functools.partial 的作用就是把 int() 的 base 参数固定住,返回一个新的函数,调用这个函数会更简单
+int2('1000') # 8
+
+# *args 将接收到的参数当作 tuple 处理
+# *kwargs 将接收到的参数当作 dict 处理
+
+################################################## 模块 ##################################################
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+' a test module '
+
+__author__ = 'LeariuH'
+
+import sys
+
+def test():
+    args = sys.argv
+    if len(args)==1:
+        print('Hello, world!')
+    elif len(args)==2:
+        print('Hello, %s!' % args[1])
+    else:
+        print('Too many arguments!')
+
+#当我们在命令行运行 hello 模块文件时, Python 解释器把一个特殊变量 __name__ 置为 __main__ ,而如果在其他地方导入该hello模块时,if判断将失败
+if __name__=='__main__':
+    test()
+
+# 类似__xxx__这样的变量是特殊变量,可以被直接引用
+# 类似_xxx和__xxx这样的函数或变量就是非公开的（private），不应该被直接引用
+
+# Starting from 面向对象编程
