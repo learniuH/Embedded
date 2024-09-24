@@ -504,4 +504,107 @@ if __name__=='__main__':
 # 类似__xxx__这样的变量是特殊变量,可以被直接引用
 # 类似_xxx和__xxx这样的函数或变量就是非公开的（private），不应该被直接引用
 
-# Starting from 面向对象编程
+################################################## 面向对象编程 ##################################################
+std1 = {'name': 'Bob', 'score': 80}
+std2 = {'name': 'Michael', 'score':90}
+def print_score(std):
+    print('%s: %s', std['name'], std['score'])
+# 以上是面向过程的编程方式
+class Student_A:
+    # 类的构造方法（初始化对象时会被自动调用）name 和 score 是类的两个属性
+    def __init__(self, name, score):
+        self.name = name
+        self.score = score
+    
+    def print_score(self):
+        print(f'{self.name}的成绩是:{self.score}')
+    
+    def get_grade(self):
+        if self.score > 90:
+            return 'A'
+        elif self.score > 60:
+            return 'B'
+        else:
+            return 'C'
+
+Bob = Student_A('Bob', 80)
+Michael = Student_A('Michael', 90)
+Bob.print_score() # Bob的成绩是:80
+Michael.print_score() # Michael的成绩是:90
+Lisa = Student_A('Lisa', 70)
+print(Lisa.name, Lisa.get_grade()) # Lisa B
+
+class People:
+    def __init__(self, name, score):
+        # 属性名称前面加上 '__', 就变成了私有变量private
+        self.__name = name
+        self.__score = score
+    
+    def print(self):
+        print("{self.__name}的成绩是:{self.__score}")
+    
+    def get_name(self):
+        return self.__name
+    
+    def get_score(self):
+        return self.__score
+
+Ros = People("Ros", 50)
+print(Ros.get_name())
+
+# exercise
+class Student(object):
+    def __init__(self, name, gender):
+        self.name = name
+        self.__gender = gender
+    
+    def get_gender(self):
+        return self.__gender
+    
+    def set_gender(self, gender):
+        self.__gender = gender
+
+# 测试:
+bart = Student('Bart', 'male')
+if bart.get_gender() != 'male':
+    print('测试失败!')
+else:
+    bart.set_gender('female')
+    if bart.get_gender() != 'female':
+        print('测试失败!')
+    else:
+        print('测试成功!')
+
+################################################## 面向对象编程 ##################################################
+class Animals(object):
+    def run(self):
+        print('Animal is running...')
+
+# 继承 Animals 
+class Dog(Animals):
+    pass
+
+class Cat(Animals):
+    # 当子类和父类都存在相同的run()方法时，子类的run()覆盖了父类的run()，在代码运行的时候，总是会调用子类的run()
+    # 这样，我们就获得了继承的另一个好处：多态！
+    def run(self):
+        print('Cat is running')
+
+dog = Dog()
+dog.run()
+cat = Cat()
+
+animals = Animals()
+dog = Dog()
+# 判断一个变量是否是某个类型 instance
+print(isinstance(animals, Animals)) # True
+print(isinstance(dog, Dog)) # True
+# 注意 ！！！ 
+print(isinstance(dog, Animals)) # 同样也是true
+# 如果一个实例的数据类型是某个子类,那么他的数据类型也可以被看作是父类,但是反过来不行
+
+def run_twice(Animals):
+    Animals.run()
+
+run_twice(animals)
+run_twice(cat)
