@@ -2,6 +2,7 @@ import math
 from collections.abc import Iterable
 from functools import reduce
 import functools
+import types
 ################################################## 字符串 & 编码 ##################################################
 devided = 10 // 3 #取整得 3
 devided = 10 / 3  #精确除法得 3.333333...
@@ -608,3 +609,66 @@ def run_twice(Animals):
 
 run_twice(animals)
 run_twice(cat)
+
+# type() 函数获取对象信息
+type(abs) # <class 'builtin_function_or_method'>
+type(dog) # <class '__main__.Dog'>
+type('str') # <class 'str'>
+
+# 使用 types 模块中定义的常量,判断一个对象是否是函数
+# import types
+type(run_twice) == types.FunctionType # True
+type(abs) == types.BuiltinFunctionType # True
+
+# 使用 dir 获取一个对象的所有属性和方法
+dir('abc') # 列出 str 对象的所有属性和方法
+
+class Mydog(object):
+    def __len__(self):
+        return 100
+    
+mydog = Mydog()
+len(mydog) # 100
+
+class Myobject(object):
+    def __init__(self):
+        self.x = 9
+    
+    def power(self):
+        return self.x * self.x
+
+obj = Myobject()
+# obj 对象有 'x' 属性吗？
+hasattr(obj, 'x') # True
+# obj 对象有 'y' 属性吗？
+hasattr(obj, 'y') #False
+setattr(obj, 'y', 19) # 设置一个属性 y;  相当于 self.y = 19
+# 获取 y 属性
+print(getattr(obj, 'y')) # 19
+# 试图获取不存在的属性时,会抛出 AttributeError 错误
+# getattr(obj, 'z') # AttributeError: 'Myobject' object has no attribute 'z'
+
+class Teacher(object):
+    def __init__(self, name):
+        self.name = name
+    
+LearniuH = Teacher('LearniuH')
+# 通过创建实例 可以给对象绑定任意属性
+LearniuH.heigh = 180 
+print(LearniuH.heigh)
+
+# 给 Teacher 类 本身绑定一个属性
+class Master(object):
+    # 绑定一个name属性,归 Master 类所有, 所有的实例 都可以访问到类的 name 属性
+    name = 'master'
+# 如果实例 绑定了自己的实例属性,实例属性会屏蔽掉类属性
+
+# exercise
+class Student(object):
+    count = 0
+
+    def __init__(self, name):
+        self.name = name
+        # 每实例化一个对象时,对应的类属性就 + 1
+        Student.count = Student.count + 1
+
