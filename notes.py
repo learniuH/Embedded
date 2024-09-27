@@ -3,6 +3,7 @@ from collections.abc import Iterable
 from functools import reduce
 import functools
 import types
+from types import MethodType
 ################################################## 字符串 & 编码 ##################################################
 devided = 10 // 3 #取整得 3
 devided = 10 / 3  #精确除法得 3.333333...
@@ -672,3 +673,200 @@ class Student(object):
         # 每实例化一个对象时,对应的类属性就 + 1
         Student.count = Student.count + 1
 
+################################################## 面向对象高级编程 ##################################################
+################################################## 使用 slots ##################################################
+def set_age(self, age):
+    self.age = age
+    return self.age
+
+lili = Student('lili')
+# 给实例绑定一个方法
+lili.set_age = MethodType(set_age, lili)
+# 调用实例的方法
+lili.set_age(25)
+lili.age # 25
+
+# 或者可以给 class 绑定方法,这样所有的实例都可以调用
+Student.set_age = set_age
+haha = Student('haha')
+haha.set_age(25)
+print(haha.age) # 25
+
+# 使用 __slots__ 
+class Student(object):
+    __slots__ = ('name', 'age') # 用 tuple 定义允许绑定的属性名称
+
+s = Student()
+# s.score # 'Student' object has no attribute 'score' 试图绑定score属性会报错
+
+# 子类不会继承 父类的 __slots__, __slots__ 定义的属性仅对当前实例起作用
+
+################################################## 使用 slots ##################################################
+class vagetable(object):
+    @property
+    def name(self):
+        return self._name
+    
+    @name.setter
+    def name(self, value):
+        set._name = value
+    
+apple = vagetable()
+apple._name = 'apple'
+        
+
+
+class Screen(object):
+    @property
+    def width(self):# 相当于定义了 getter 方法
+        return self._width
+    
+    @width.setter# 相当于定义了 setter 方法
+    def width(self, value):
+        self._width = value
+    
+    @property
+    def height(self):
+        return self._height
+    
+    @height.setter
+    def height(self, value):
+        self._height = value
+
+    @property
+    def resolution(self):
+        return self.height * self.width
+
+# 测试:
+s = Screen()
+s.width = 1024
+s.height = 768
+print('resolution =', s.resolution)
+if s.resolution == 786432:
+    print('测试通过!')
+else:
+    print('测试失败!')
+
+# 效果等同于
+class Student(object):
+    def get_score(self):
+         return self._score
+
+    def set_score(self, value):
+        if not isinstance(value, int):
+            raise ValueError('score must be an integer!')
+        if value < 0 or value > 100:
+            raise ValueError('score must between 0 ~ 100!')
+        self._score = value
+
+
+
+class Vagetable(object):
+    @property
+    def name(self): # 两个方法的名字要一样
+        return self._name
+    
+    @name.setter
+    def name(self, value):
+        self._name = value
+    
+peal = Vagetable()
+peal.name = 12
+print(peal.name)
+
+'''
+                ┌───────────────┐
+                │    Animal     │
+                └───────────────┘
+                        │
+           ┌────────────┴────────────┐
+           │                         │
+           ▼                         ▼
+    ┌─────────────┐           ┌─────────────┐
+    │   Mammal    │           │    Bird     │
+    └─────────────┘           └─────────────┘
+           │                         │
+     ┌─────┴──────┐            ┌─────┴──────┐
+     │            │            │            │
+     ▼            ▼            ▼            ▼
+┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐
+│   Dog   │  │   Bat   │  │ Parrot  │  │ Ostrich │
+└─────────┘  └─────────┘  └─────────┘  └─────────┘
+
+                ┌───────────────┐
+                │    Animal     │
+                └───────────────┘
+                        │
+           ┌────────────┴────────────┐
+           │                         │
+           ▼                         ▼
+    ┌─────────────┐           ┌─────────────┐
+    │  Runnable   │           │   Flyable   │
+    └─────────────┘           └─────────────┘
+           │                         │
+     ┌─────┴──────┐            ┌─────┴──────┐
+     │            │            │            │
+     ▼            ▼            ▼            ▼
+┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐
+│   Dog   │  │ Ostrich │  │ Parrot  │  │   Bat   │
+└─────────┘  └─────────┘  └─────────┘  └─────────┘
+'''
+# 针对上面的框架 比如 dog 属于 mammal 又能 run 正确的做法是
+# 动物们 继承 mammal 和 bird 两个大类, 针对 会飞和会跑 继承会飞或会跑的类(赋予动物功能)
+class Animals(object): # 动物大类
+    pass
+
+class Mammal(Animals): # 哺乳动物大类
+    pass
+
+class Bird(Animals): # 鸟 大类
+    pass
+
+class Runable(Animals): # 能跑
+    def run(self):
+        print('Running...')
+
+class Flyable(Animals): # 会飞
+    def fly(self):
+        print('Flying...')
+
+# 如果 dog 需要 runable 里的方法,就多继承一个 Runable
+class Dog(Mammal, Runable):
+    def __init__(self, name):
+        self.name = name
+
+dog = Dog('dog')
+# 通过多重继承,一个子类可以拥有多个父类的功能
+
+# 定制类
+class Rabit(object):
+    def __init__(self, name):
+        self.name = name
+
+    def __str__(self):
+        return '%s is jumpping' %self.name
+
+print(Rabit('wihite')) # white is jumpping
+
+################################################## 定制类 ##################################################
+# 写一个类 Fib 作用于 for循环
+class Fib(object):
+    
+    def __init__(self):
+        self.a, self.b = 0, 1
+        #self.a = 0
+        #self.b = 1 
+    
+    def __iter__(self):
+        return self # 实例本身就是循环对象,故返回自己
+    
+    def __next__(self):
+        self.a, self.b = self.b, self.a + self.b # 计算下一个值
+        if self.a > 10000:
+            raise StopIteration()
+        return self.a
+
+for n in Fib():
+    pass
+    #print(n) #迭代一个类, 打印斐波那契数列
+    
