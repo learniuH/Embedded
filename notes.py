@@ -903,7 +903,6 @@ class Fib(object):
         for x in range(n):
             a, b = b, a + b
         return a
-
-print(Fib()[5])
-for i in range(1):
-    print(i)
+Fib()[0] # 1
+Fib()[1] # 1
+Fib()[2] # 2
