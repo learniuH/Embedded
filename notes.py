@@ -869,4 +869,41 @@ class Fib(object):
 for n in Fib():
     pass
     #print(n) #迭代一个类, 打印斐波那契数列
+
+################################################## 定制类 ##################################################
+class Student(object):
+    def __init__(self, name):
+        self.name = name
+    def __str__(self):
+        return 'Student object (name = %s)' % self.name
+    #__repr__ = __str__
+
+print(Student('Michael')) # Student object (name = Michael)
+
+class Fib(object):
+    def __init__(self):
+        self.a, self.b = 0, 1 # 初始化两个计数器
+
+    def __iter__(self):
+        return self # 实例本身就是迭代对象,故返回自己
     
+    def __next__(self):
+        self.a, self.b = self.b, self.a + self.b 
+        if self.a > 20:
+            raise StopIteration()
+        return self.a
+
+for n in Fib():
+    print(n) # 1 1 2 3 5 8 13
+# 虽然能作用于 for 循环,也和list有点像,但是无法通过下标取出元素, 需要实现 __getitem__()方法
+
+class Fib(object):
+    def __getitem__(self, n):
+        a, b = 1, 1
+        for x in range(n):
+            a, b = b, a + b
+        return a
+
+print(Fib()[5])
+for i in range(1):
+    print(i)
